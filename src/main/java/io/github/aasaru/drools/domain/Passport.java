@@ -19,6 +19,7 @@ public class Passport {
   private LocalDate expiresOn;
   private int unusedVisaPages;
   private int age;
+  private String country;
 
   private Validation validation = Validation.UNKNOWN;
 
@@ -37,6 +38,10 @@ public class Passport {
 
   public boolean isExpired() {
     return expiresOn.isBefore(LocalDate.now());
+  }
+
+  public boolean isBanned() {
+    return BannedCountries.bannedCountries.contains(country);
   }
 
   public String getPassportNumber() {
@@ -71,6 +76,10 @@ public class Passport {
     return cause;
   }
 
+  public String getCountry() {
+    return country;
+  }
+
   public void setCause(String cause) {
     this.cause = cause;
   }
@@ -84,13 +93,13 @@ public class Passport {
     return new PassportBuilder();
   }
 
-   public static final class PassportBuilder {
+  public static final class PassportBuilder {
     private String passportNumber;
     private String name;
     private LocalDate expiresOn;
     private int unusedVisaPages;
     private int age;
-
+    private String country;
     private PassportBuilder() {
     }
 
@@ -119,6 +128,11 @@ public class Passport {
       return this;
     }
 
+    public PassportBuilder withCountry(String country) {
+      this.country = country;
+      return this;
+    }
+
     public Passport build() {
       Passport passport = new Passport();
       passport.passportNumber = passportNumber;
@@ -126,6 +140,7 @@ public class Passport {
       passport.expiresOn = expiresOn;
       passport.unusedVisaPages = unusedVisaPages;
       passport.age = age;
+      passport.country = country;
       return passport;
     }
   }
@@ -136,12 +151,12 @@ public class Passport {
     if (!(o instanceof Passport)) return false;
     Passport passport = (Passport) o;
     return unusedVisaPages == passport.unusedVisaPages &&
-        age == passport.age &&
-        Objects.equals(passportNumber, passport.passportNumber) &&
-        Objects.equals(name, passport.name) &&
-        Objects.equals(expiresOn, passport.expiresOn) &&
-        validation == passport.validation &&
-        Objects.equals(cause, passport.cause);
+            age == passport.age &&
+            Objects.equals(passportNumber, passport.passportNumber) &&
+            Objects.equals(name, passport.name) &&
+            Objects.equals(expiresOn, passport.expiresOn) &&
+            validation == passport.validation &&
+            Objects.equals(cause, passport.cause);
   }
 
   @Override

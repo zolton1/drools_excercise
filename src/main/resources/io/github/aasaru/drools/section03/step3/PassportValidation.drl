@@ -26,3 +26,11 @@ rule "Full passport"
   then
 	System.out.println( $passport + " is INVALID because it has no space for visa" );
 end
+
+rule "Valid country of origin"
+  dialect "mvel"
+  when
+	$passport: Passport( isBanned(), $country: country)
+  then
+	System.out.println( $passport + " is BANNED because " + $country + " is on the banlist" );
+end
